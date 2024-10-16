@@ -1,9 +1,11 @@
 const {Router}=require('express');
 const router=Router();
 const db=require("../db");
+const middleware=('./middleware');
 const jwt = require("jsonwebtoken");
 const {jwt_secret}=require("../config");
-const userValidate=require("./types")
+const {userValidate}=require("./types")
+const {validate}=require("./types")
 router.post('/signup',async(req,res)=>{
     const validation=userValidate.safeParse(req.body)
     if(!validation.success){
@@ -46,7 +48,7 @@ router.post("/signin",async(req,res)=>{
         return res.send("invalid input");
     }
     else{
-        const findOne=db.findOne({username:req.body.username,
+        const findOne=await db.findOne({username:req.body.username,
             password:req.body.password
         });
         if(findOne.success){
@@ -58,5 +60,26 @@ router.post("/signin",async(req,res)=>{
             return res.status(414).send("No username matched");
         }
     }
+})
+router.put("/",middleware,async(req,res)=>{
+  const validateSuccess=validate.safeParse(req.body);
+  if(!validateSuccess.success){
+    return res.send("Enter valid input details");
+  }
+ try{
+    const findUser=db.findOne({username:req.username});
+    if(!findUser){
+        return res.send("no user found");
+
+    }
+    else{
+        await db.updateOne({username:req.username},
+            {
+                $set:{password:req.body.password,firstName:req.body.firstName,lastName:req.body.lastName}
+            }
+        );
+
+    }
+ }
 })
 module.exports=router

@@ -5,4 +5,9 @@ const userValidate=zod.object({
     lastName:zod.string(),
     password:zod.number().min(5)
 })
-module.exports=userValidate
+const validate=zod.object({
+    password:zod.number().min(5).optional(),
+    firstName:zod.string().optional(),
+    lastName:zod.string().optional()
+})
+module.exports={userValidate,validate}
