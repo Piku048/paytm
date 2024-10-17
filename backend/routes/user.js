@@ -53,7 +53,7 @@ router.post("/signin",async(req,res)=>{
         });
         if(findOne.success){
             const id=findOne._id;
-            const token=jwt.sign({id},jwt_secret);
+            const token=jwt.sign({id},jwt_secret); 
             return res.json({token:token})
         }
         else{
@@ -80,6 +80,29 @@ router.put("/",middleware,async(req,res)=>{
         );
 
     }
+ } catch(err){
+      console.log(err);
  }
+})
+router.get("/bulk",async(req,res)=>{
+    const filter=req.query.filter
+    const users=db.find({$or:[{
+        firstName:{
+            "$regex":filter
+        }},{
+      lastName:{
+        "$regex":filter
+      }
+        }]
+    
+})
+res.json({
+    user: users.map(user => ({
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        _id: user._id
+    }))
+})
 })
 module.exports=router
