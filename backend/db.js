@@ -7,7 +7,15 @@ const UserSchema=new mongoose.Schema({
     password:String
 
 })
-const User=mongoose.model('User',UserSchema);
+const accountSchema=new mongoose.Schema({
+    userId:{type:Schema.Types.ObjectId,
+        ref:"User",
+        required:true
+    },
+    balance:float
+})
+const db=mongoose.model('User',UserSchema);
+const Account=mongoose.model('Account',accountSchema);
 module.exports={
-    User
+    db,Account
 }

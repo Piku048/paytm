@@ -1,6 +1,7 @@
 const {Router}=require('express');
 const router=Router();
-const db=require("../db");
+const {db}=require("../db");
+const {Account}=require("../db");
 const middleware=('./middleware');
 const jwt = require("jsonwebtoken");
 const {jwt_secret}=require("../config");
@@ -27,6 +28,10 @@ router.post('/signup',async(req,res)=>{
                     firstName:firstName,
                     lastName:lastName,
                     password:password
+                })
+                await Account.create({
+                  userId:user._id,
+                  balance: 1 + Math.random() * 10000
                 })
                
               const userId=user._id;
@@ -67,13 +72,13 @@ router.put("/",middleware,async(req,res)=>{
     return res.send("Enter valid input details");
   }
  try{
-    const findUser=db.findOne({username:req.username});
+    const findUser=db.findOne({_id:req._id});
     if(!findUser){
         return res.send("no user found");
 
     }
     else{
-        await db.updateOne({username:req.username},
+        await db.updateOne({_id:req._id},
             {
                 $set:{password:req.body.password,firstName:req.body.firstName,lastName:req.body.lastName}
             }
