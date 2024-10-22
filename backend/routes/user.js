@@ -2,7 +2,7 @@ const {Router}=require('express');
 const router=Router();
 const {db}=require("../db");
 const {Account}=require("../db");
-const middleware=('./middleware');
+const middleware=require('./middleware');
 const jwt = require("jsonwebtoken");
 const {jwt_secret}=require("../config");
 const {userValidate}=require("./types")
@@ -72,7 +72,7 @@ router.put("/",middleware,async(req,res)=>{
     return res.send("Enter valid input details");
   }
  try{
-    const findUser=db.findOne({_id:req._id});
+    const findUser=await db.findOne({_id:req._id});
     if(!findUser){
         return res.send("no user found");
 
@@ -83,6 +83,8 @@ router.put("/",middleware,async(req,res)=>{
                 $set:{password:req.body.password,firstName:req.body.firstName,lastName:req.body.lastName}
             }
         );
+        return res.send("User updated successfully");
+
 
     }
  } catch(err){
@@ -90,8 +92,8 @@ router.put("/",middleware,async(req,res)=>{
  }
 })
 router.get("/bulk",async(req,res)=>{
-    const filter=req.query.filter
-    const users=db.find({$or:[{
+    const filter=req.query.filter||"";
+    const users=await db.find({$or:[{
         firstName:{
             "$regex":filter
         }},{

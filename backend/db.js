@@ -1,4 +1,5 @@
 const mongoose=require('mongoose');
+const Schema = mongoose.Schema;
 mongoose.connect('mongodb+srv://priyaranjandehury2022:Ul0QopYPwhGRIlFK@cluster0.8wfysty.mongodb.net/paytm');
 const UserSchema=new mongoose.Schema({
     username:String,
@@ -12,7 +13,7 @@ const accountSchema=new mongoose.Schema({
         ref:"User",
         required:true
     },
-    balance:float
+    balance:Number
 })
 const db=mongoose.model('User',UserSchema);
 const Account=mongoose.model('Account',accountSchema);

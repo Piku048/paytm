@@ -1,6 +1,6 @@
 const zod=require('zod');
 const userValidate=zod.object({
-    username:zod.email(),
+    username:zod.string().email(),
     firstName:zod.string(),
     lastName:zod.string(),
     password:zod.number().min(5)
