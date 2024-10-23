@@ -1,7 +1,7 @@
-const {Router}=require('express');
-const router=Router();
+const express=require('express');
+const router=express.Router();
 const user=require('./user');
-const account=require('./account')
+const account=require('./account');
 
 router.use("/user",user);
 router.use("/account",account);

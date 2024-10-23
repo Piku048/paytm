@@ -2,7 +2,7 @@ const {Router}=require('express');
 const router=Router();
 const {db}=require("../db");
 const {Account}=require("../db");
-const middleware=require('./middleware');
+const {authMiddleware}=require('./middleware');
 const jwt = require("jsonwebtoken");
 const {jwt_secret}=require("../config");
 const {userValidate}=require("./types")
@@ -14,7 +14,7 @@ router.post('/signup',async(req,res)=>{
     }
     else{
         const existUsername = await db.findOne({ username: req.body.username});
-        if (existUsername.success) {
+        if (existUsername) {
           res.send("username already exist");
         }
         else{
@@ -56,7 +56,7 @@ router.post("/signin",async(req,res)=>{
         const findOne=await db.findOne({username:req.body.username,
             password:req.body.password
         });
-        if(findOne.success){
+        if(findOne){
             const id=findOne._id;
             const token=jwt.sign({id},jwt_secret); 
             return res.json({token:token})
@@ -66,7 +66,7 @@ router.post("/signin",async(req,res)=>{
         }
     }
 })
-router.put("/",middleware,async(req,res)=>{
+router.put("/",authMiddleware,async(req,res)=>{
   const validateSuccess=validate.safeParse(req.body);
   if(!validateSuccess.success){
     return res.send("Enter valid input details");
@@ -112,4 +112,4 @@ res.json({
     }))
 })
 })
-module.exports=router
+module.exports= router

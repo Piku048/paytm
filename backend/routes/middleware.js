@@ -19,8 +19,8 @@ async function authMiddleware(req,res,next){
     }
    }catch(err){
     res.status(403).json({
-        msg: "Invalid or expired token"
+        msg:err
     });
    }
 }
-module.exports=authMiddleware
+module.exports= {authMiddleware}
