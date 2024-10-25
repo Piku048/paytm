@@ -10,8 +10,8 @@ async function authMiddleware(req,res,next){
     const words=token.split(" ");
     const jwtToken=words[1];
     const decodedValue=jwt.verify(jwtToken,jwt_secret);
-    if(decodedValue.username){
-        req._id = decodedValue._id;
+    if(decodedValue.userId){
+        req._id = decodedValue.userId;
         next()
     }
     else{

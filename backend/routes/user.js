@@ -18,10 +18,11 @@ router.post('/signup',async(req,res)=>{
           res.send("username already exist");
         }
         else{
-            const username=req.body.username
-            const password=req.body.password
-            const  firstName=req.body.firstName
-            const lastName=req.body.lastName
+            const username=req.body.username;
+            
+            const  firstName=req.body.firstName;
+            const lastName=req.body.lastName;
+            const password=req.body.password;
             try{
                 const user= await db.create({    //It does not return null but in case of find it return null,so thats why try and catch
                     username:username,
@@ -72,6 +73,7 @@ router.put("/",authMiddleware,async(req,res)=>{
     return res.send("Enter valid input details");
   }
  try{
+    console.log(req._id);
     const findUser=await db.findOne({_id:req._id});
     if(!findUser){
         return res.send("no user found");
